@@ -1,0 +1,24 @@
+# Nombre del flujo de trabajo
+name: Fly Deploy
+
+# Evento que dispara el flujo de trabajo
+on:
+  push:
+    branches:
+      - main # Se activa al hacer push a la rama 'main'
+
+jobs:
+  deploy:
+    name: Deploy app
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Clona tu repositorio en el entorno de GitHub Actions
+      - uses: actions/checkout@v3
+
+      # 2. Instala y configura el CLI de Fly.io (flyctl)
+      - uses: superfly/fly-pr-review-apps@v1
+        with:
+          fly_api_token: ${{ secrets.FLY_API_TOKEN }}
+
+      # 3. Ejecuta el comando para desplegar tu aplicación
+      - run: fly deploy --remote-only
